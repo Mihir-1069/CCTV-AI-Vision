@@ -12,3 +12,17 @@ __pycache__/
 !.env.example
 *.log
 .DS_Store
+# AI model weights
+*.pt
+*.onnx
+
+# Generated video and output files
+output/
+data/videos/
+data/rtsp/
+
+# Logs
+logs/
+
+# Model training artifacts
+runs/

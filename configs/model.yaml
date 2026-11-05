@@ -1,0 +1,99 @@
+# YOLO Model Configuration
+# Computer Vision Pipeline - Person 1
+
+# YOLO Detection Settings
+yolo:
+  # Model selection
+  model_name: "yolo11n.pt"  # Nano model for CPU inference
+  # Alternative options: yolo11s.pt, yolo11m.pt, yolo11l.pt, yolo11x.pt
+  
+  # Detection parameters
+  confidence_threshold: 0.5  # Minimum confidence for detection
+  iou_threshold: 0.45  # IoU threshold for NMS
+  max_detections: 100  # Maximum detections per frame
+  
+  # Class filtering (COCO classes)
+  target_classes: [0]  # 0 = person only
+  
+  # Device configuration
+  device: "cpu"  # Options: "cpu", "cuda", "mps"
+  # Auto-detect hardware if set to "auto"
+  
+  # Model optimization
+  half_precision: false  # Use FP16 (not recommended for CPU)
+  verbose: true  # Print inference logs
+
+# Pose Estimation Settings
+pose:
+  model_name: "yolo11n-pose.pt"
+  confidence_threshold: 0.5  # Minimum person detection confidence
+  keypoint_threshold: 0.5  # Minimum confidence for a keypoint to be considered reliable
+  device: "cpu"  # Options: "cpu", "cuda", "mps", "auto"
+  verbose: true
+  
+  # Pose-specific inference image size (independent of performance.resize_width)
+  image_size: 640
+  
+  # NMS IoU threshold for pose model
+  iou_threshold: 0.45
+  
+  # Association settings — matching poses to existing track IDs
+  association_iou_threshold: 0.5  # Minimum IoU for pose-to-track matching
+  
+  # Skeleton drawing options
+  skeleton_drawing:
+    keypoint_color: [0, 255, 255]  # BGR — yellow
+    skeleton_color: [0, 255, 0]    # BGR — green
+    bbox_color: [0, 200, 0]        # BGR — dark green
+    keypoint_radius: 4
+    line_thickness: 2
+
+# ByteTrack Settings
+tracking:
+  tracker_type: "bytetrack"
+  
+  # ByteTrack parameters
+  track_thresh: 0.5  # Detection confidence threshold for tracking
+  track_buffer: 30  # Frames to keep track alive without detection
+  match_thresh: 0.8  # IoU threshold for matching
+  fuse_score: true  # Fuse detection confidence with tracking
+  
+  # Track management
+  min_box_area: 10  # Minimum bounding box area (pixels)
+  frame_rate: 30  # Video FPS assumption for track age calculation
+
+# Performance Settings
+performance:
+  # Frame processing
+  frame_skip: 0  # Process every Nth frame (0 = all frames)
+  resize_width: 640  # Resize width for inference (0 = original)
+  resize_height: 480  # Resize height for inference (0 = original)
+  maintain_aspect_ratio: true
+  
+  # Batch processing
+  batch_size: 1  # Frames per batch (CPU: keep at 1)
+  
+  # Output
+  save_annotated_video: true
+  output_codec: "mp4v"
+  output_fps: 30
+
+# Evaluation Settings
+evaluation:
+  metrics:
+    - precision
+    - recall
+    - f1_score
+    - map50
+    - fps
+    - latency_ms
+  
+  # Ground truth format
+  gt_format: "coco"  # Options: "coco", "yolo", "voc"
+  
+  # Tracking evaluation (requires ground truth tracks)
+  evaluate_tracking: false
+  tracking_metrics:
+    - idf1
+    - id_switches
+    - fragmentation

@@ -1,0 +1,112 @@
+# Camera Configuration
+# Computer Vision Pipeline - Person 1
+
+# Camera zones definition
+cameras:
+  # Default camera for demo/testing
+  cam_001:
+    id: "cam_001"
+    name: "Demo Camera"
+    source_type: "video"
+    source_path: "data/videos/test_sample.mp4"
+    
+    # Video properties
+    fps: 30
+    width: 640
+    height: 480
+    
+    # Processing zones (polygon coordinates)
+    zones:
+      main_area:
+        id: "zone_001"
+        polygon:
+          - [50, 50]
+          - [590, 50]
+          - [590, 430]
+          - [50, 430]
+    
+    # Virtual counting lines for entry/exit
+    counting_lines:
+      door_line:
+        start: [320, 240]
+        end: [320, 400]
+        direction: "bidirectional"
+        debounce_frames: 10
+    
+    # Occupancy settings
+    occupancy:
+      capacity: 30
+      alert_threshold: 25
+    
+    # Processing overrides
+    processing:
+      confidence_threshold: 0.5
+      frame_skip: 0
+      resize_width: 640
+      resize_height: 480
+
+  # Example camera configuration
+  camera_1:
+    id: "cam_002"
+    name: "Classroom Front"
+    source_type: "video"  # Options: "video", "rtsp", "usb"
+    source_path: "data/videos/classroom_sample.mp4"
+    
+    # Video properties (auto-detected if not specified)
+    fps: 30
+    width: 1920
+    height: 1080
+    
+    # Processing zones (polygon coordinates)
+    zones:
+      main_area:
+        id: "zone_002"
+        polygon:
+          - [100, 100]
+          - [1820, 100]
+          - [1820, 980]
+          - [100, 980]
+    
+    # Virtual counting lines for entry/exit
+    counting_lines:
+      door_line:
+        start: [500, 500]
+        end: [500, 700]
+        direction: "bidirectional"  # Options: "entry", "exit", "bidirectional"
+        debounce_frames: 10
+    
+    # Occupancy settings
+    occupancy:
+      capacity: 40
+      alert_threshold: 35  # Alert when occupancy exceeds this
+    
+    # Processing overrides
+    processing:
+      confidence_threshold: 0.5
+      frame_skip: 0
+      resize_width: 640
+      resize_height: 480
+
+# Global camera settings
+global_settings:
+  # Default processing parameters
+  default_confidence: 0.5
+  default_frame_skip: 0
+  default_resize_width: 640
+  default_resize_height: 480
+  
+  # RTSP stream settings
+  rtsp:
+    reconnect_attempts: 3
+    reconnect_delay: 5  # seconds
+    buffer_size: 1024 * 1024  # 1MB
+  
+  # Video file settings
+  video:
+    supported_formats:
+      - mp4
+      - avi
+      - mov
+      - mkv
+      - webm
+    max_duration: 3600  # seconds (1 hour max)

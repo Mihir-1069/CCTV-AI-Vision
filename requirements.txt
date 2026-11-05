@@ -1,0 +1,26 @@
+# Computer Vision Pipeline Dependencies
+# Python 3.12+
+
+# Core Computer Vision
+opencv-python>=4.8.0
+ultralytics>=8.0.0
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Tracking and Analytics
+supervision>=0.16.0
+
+# Evaluation and Metrics
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+
+# Configuration
+pyyaml>=6.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Optional: Performance optimization (CPU inference)
+onnx>=1.15.0
+onnxruntime>=1.16.0

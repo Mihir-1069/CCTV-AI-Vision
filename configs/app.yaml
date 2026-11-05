@@ -1,0 +1,83 @@
+# Application Configuration
+# Computer Vision Pipeline - Person 1
+
+# Application settings
+app:
+  name: "SchoolVision AI - Computer Vision Pipeline"
+  version: "1.0.0"
+  environment: "development"  # Options: "development", "production"
+  
+# Logging configuration
+logging:
+  level: "INFO"  # Options: "DEBUG", "INFO", "WARNING", "ERROR"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/cv_pipeline.log"
+  console: true
+  
+# Paths configuration
+paths:
+  # Input paths
+  video_input_dir: "data/videos"
+  rtsp_sources_file: "data/rtsp_sources.json"
+  
+  # Output paths
+  output_dir: "output"
+  annotated_video_dir: "output/annotated_videos"
+  json_output_dir: "output/json"
+  evaluation_dir: "output/evaluation"
+  plots_dir: "output/plots"
+  
+  # Model paths
+  models_dir: "models"
+  pretrained_models_dir: "models/pretrained"
+  
+  # Log directory
+  log_dir: "logs"
+
+# Processing settings
+processing:
+  # Hardware detection
+  auto_detect_gpu: true
+  fallback_to_cpu: true
+  
+  # Multi-threading
+  num_workers: 0  # 0 = main thread only (recommended for CPU)
+  
+  # Memory management
+  max_memory_mb: 4096  # Maximum memory usage in MB
+  
+# Output settings
+output:
+  # JSON output format
+  json_format: "standard"  # Options: "standard", "verbose"
+  include_frame_data: true
+  include_keypoints: true
+  timestamp_format: "%Y-%m-%d %H:%M:%S"
+  
+  # Video output
+  save_annotated: true
+  show_preview: false  # Show live preview window
+  
+  # Compression
+  compress_json: false
+
+# Integration settings
+integration:
+  # FastAPI backend integration
+  enable_api_integration: false
+  api_base_url: "http://localhost:8000"
+  api_timeout: 30  # seconds
+  
+  # WebSocket for real-time updates
+  enable_websocket: false
+  websocket_url: "ws://localhost:8000/ws"
+  
+  # Batch processing mode
+  batch_mode: false
+  batch_size: 10
+
+# Testing settings
+testing:
+  test_video_path: "data/videos/test_sample.mp4"
+  test_output_dir: "output/test"
+  generate_sample_data: false  # Do not generate fake data
