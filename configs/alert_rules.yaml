@@ -1,0 +1,74 @@
+# Alert Rules Configuration — SchoolVision AI
+# Phase 9 — Rule Engine
+#
+# Rules are evaluated per-frame against combined pipeline output.
+# Each rule specifies: id, description, severity, conditions, and
+# a cooldown period to suppress repeated alerts.
+#
+# Supported condition keys
+# ------------------------
+# occupancy_count        : current number of people in frame
+# occupancy_threshold    : alert_threshold value from OccupancyManager
+# activity_label         : any person has this ActivityLabel
+# anomaly_score          : maximum anomaly_score across persons
+# zone_count             : number of persons in a named zone
+# tracking_count         : number of active tracks
+#
+# Supported operators: gt, gte, lt, lte, eq, ne
+#
+# severity levels: INFO | WARNING | CRITICAL
+
+rules:
+  - id: "OVERCROWDING"
+    description: "Occupancy exceeds configured alert threshold"
+    severity: "WARNING"
+    cooldown_frames: 90        # ~3 s at 30fps — suppress repeat alerts
+    conditions:
+      - field: "occupancy_count"
+        operator: "gte"
+        value: 25              # override per camera via camera.yaml alert_threshold
+
+  - id: "FALL_LIKE_EVENT"
+    description: "Person in a posture consistent with a fall-like event (geometric observation — requires human verification)"
+    severity: "CRITICAL"
+    cooldown_frames: 150       # ~5 s — urgent but debounced
+    conditions:
+      - field: "activity_label"
+        operator: "eq"
+        value: "FALL_LIKE_EVENT"
+
+  - id: "ANOMALOUS_BEHAVIOUR"
+    description: "Unusual pose pattern detected by anomaly detector"
+    severity: "WARNING"
+    cooldown_frames: 90
+    conditions:
+      - field: "anomaly_score"
+        operator: "gte"
+        value: 0.75            # reconstruction error above threshold (0–1 normalised)
+
+  - id: "RUNNING_DETECTED"
+    description: "Running detected in monitored area"
+    severity: "INFO"
+    cooldown_frames: 60
+    conditions:
+      - field: "activity_label"
+        operator: "eq"
+        value: "RUNNING"
+
+  - id: "EMPTY_FRAME"
+    description: "No persons detected in frame for sustained period"
+    severity: "INFO"
+    cooldown_frames: 300       # ~10 s
+    conditions:
+      - field: "occupancy_count"
+        operator: "eq"
+        value: 0
+
+  - id: "HIGH_ANOMALY_SCORE"
+    description: "Very high anomaly reconstruction error"
+    severity: "CRITICAL"
+    cooldown_frames: 90
+    conditions:
+      - field: "anomaly_score"
+        operator: "gte"
+        value: 0.90
