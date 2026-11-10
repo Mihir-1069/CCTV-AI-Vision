@@ -42,6 +42,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
+from ..path_utils import get_trained_models_dir
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -103,8 +105,8 @@ class AnomalyDetector:
         detector.save_model()
     """
 
-    _DEFAULT_MODEL_PATH = "models/anomaly/anomaly_detector.joblib"
-    _DEFAULT_SCALER_PATH = "models/anomaly/anomaly_scaler.joblib"
+    _DEFAULT_MODEL_FILENAME  = "anomaly_detector.joblib"
+    _DEFAULT_SCALER_FILENAME = "anomaly_scaler.joblib"
 
     _DEFAULT_CONFIG: Dict[str, Any] = {
         "anomaly_threshold":        0.75,  # normalised score above which is anomaly
@@ -132,9 +134,9 @@ class AnomalyDetector:
         if config:
             self._cfg.update(config)
 
-        project_root = Path(__file__).parent.parent.parent
-        self._model_path  = Path(model_path  or project_root / self._DEFAULT_MODEL_PATH)
-        self._scaler_path = Path(scaler_path or project_root / self._DEFAULT_SCALER_PATH)
+        _anomaly_dir = get_trained_models_dir() / "anomaly"
+        self._model_path  = Path(model_path)  if model_path  else _anomaly_dir / self._DEFAULT_MODEL_FILENAME
+        self._scaler_path = Path(scaler_path) if scaler_path else _anomaly_dir / self._DEFAULT_SCALER_FILENAME
 
         self._model:  Optional[Any] = None
         self._scaler: Optional[Any] = None

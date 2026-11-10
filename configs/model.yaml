@@ -3,9 +3,10 @@
 
 # YOLO Detection Settings
 yolo:
-  # Model selection
-  model_name: "yolo11n.pt"  # Nano model for CPU inference
-  # Alternative options: yolo11s.pt, yolo11m.pt, yolo11l.pt, yolo11x.pt
+  # Model selection — path relative to repository root (CCTV-AI-Vision/)
+  # Ultralytics auto-downloads the model when the file is not found locally.
+  model_name: "models/pretrained/yolo11n.pt"  # Nano model for CPU inference
+  # Alternative options: models/pretrained/yolo11s.pt etc.
   
   # Detection parameters
   confidence_threshold: 0.5  # Minimum confidence for detection
@@ -25,7 +26,7 @@ yolo:
 
 # Pose Estimation Settings
 pose:
-  model_name: "yolo11n-pose.pt"
+  model_name: "models/pretrained/yolo11n-pose.pt"
   confidence_threshold: 0.5  # Minimum person detection confidence
   keypoint_threshold: 0.5  # Minimum confidence for a keypoint to be considered reliable
   device: "cpu"  # Options: "cpu", "cuda", "mps", "auto"

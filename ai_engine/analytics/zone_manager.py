@@ -10,6 +10,7 @@ import logging
 import yaml
 
 from .analytics_utils import AnalyticsUtils
+from ..path_utils import get_config_path
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ class ZoneManager:
         
         # Load configuration
         if config_path is None:
-            config_path = Path(__file__).parent.parent.parent / "configs" / "camera.yaml"
+            config_path = get_config_path("camera.yaml")
         
         if zones_config:
             self.load_zones(zones_config)

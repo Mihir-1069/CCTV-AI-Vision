@@ -1,0 +1,41 @@
+# Dataset manifest template.
+# This file tracks raw dataset presence without storing downloaded data.
+
+version: 1
+project: SchoolVisionAI
+
+datasets:
+  crowdhuman:
+    dataset_name: CrowdHuman
+    task: person_detection
+    source: "https://www.crowdhuman.org/"
+    required_paths:
+      - "annotation_train.odgt"
+      - "annotation_val.odgt"
+      - "images"
+    state: not_downloaded
+
+  mot17:
+    dataset_name: MOT17
+    task: tracking_evaluation
+    source: "https://motchallenge.net/"
+    required_paths:
+      - "train"
+      - "test"
+      - "seqmaps"
+    state: not_downloaded
+
+  scut_head:
+    dataset_name: SCUT_HEAD
+    task: head_detection
+    source: "SCUT head detection benchmark"
+    required_paths:
+      - "images"
+      - "annotations"
+    state: not_downloaded
+
+training:
+  target: "CrowdHuman person detection"
+  architecture: "YOLO11 family"
+  notes: "Use the existing YOLO11-based inference stack; do not assume YOLOv8 or a different architecture without a design review."
+  status: "prepared_for_dataset_validation_only"

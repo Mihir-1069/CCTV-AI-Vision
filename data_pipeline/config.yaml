@@ -1,0 +1,62 @@
+# SchoolVision AI dataset preparation configuration
+# This file defines raw dataset locations and dataset-specific formats.
+# It intentionally does not fetch or train anything.
+
+project:
+  name: "SchoolVision AI"
+  owner: "Person 1 - Computer Vision / AI"
+  # base_dir is resolved at runtime by data_pipeline scripts using path_utils.get_project_root()
+  model_family: "ultralytics-yolo11"
+
+paths:
+  raw_root: "data_pipeline/raw"
+  processed_root: "data_pipeline/processed"
+  reports_root: "data_pipeline/reports"
+  crowdhuman_raw: "data_pipeline/raw/CrowdHuman"
+  mot17_raw: "data_pipeline/raw/MOT17"
+  scut_head_raw: "data_pipeline/raw/SCUT_HEAD"
+
+split_policy:
+  crowdhuman:
+    prefer_official_split: true
+    use_deterministic_fallback: true
+    train_ratio: 0.9
+    val_ratio: 0.1
+    seed: 42
+  scut_head:
+    prefer_official_split: true
+    use_deterministic_fallback: true
+    train_ratio: 0.9
+    val_ratio: 0.1
+    seed: 42
+
+model:
+  detection_model: "yolo11n.pt"
+  pose_model: "yolo11n-pose.pt"
+  task: "person_detection"
+  classes:
+    - person
+
+mot17:
+  valid_person_classes: [1, 2]
+  ignore_classes: [0, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  use_trackeval: true
+  metrics: ["HOTA", "MOTA", "IDF1", "IDSW"]
+
+crowdhuman:
+  valid_targets: ["full_body", "visible_body", "head"]
+  default_target: "full_body"
+  ignore_flag_name: "ignore"
+  convert_to_yolo: true
+  labels_per_image: true
+  class_id: 0
+
+scut_head:
+  task: "head_detection"
+  class_name: "head"
+  class_id: 0
+  label_type: "head_box"
+
+future_work:
+  activity_recognition: "requires temporal video datasets and frame-level labels"
+  fall_detection: "requires event-level or video-level temporal labels"

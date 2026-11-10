@@ -48,7 +48,7 @@ except (ImportError, Exception):
     _HAS_EVENTS = False
 
 try:
-    from analytics.crowd_analysis import CrowdAnalyzer
+    from ai_engine.crowd.crowd_analytics import CrowdAnalytics
     _HAS_CROWD = True
 except (ImportError, Exception):
     _HAS_CROWD = False
@@ -251,7 +251,7 @@ def run_pipeline(args: argparse.Namespace) -> None:
 
         if args.show:
             cv2.imshow("SchoolVision AI", annotated)
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            if cv2.waitKey(30) & 0xFF == ord("q"):
                 break
 
         if writer:

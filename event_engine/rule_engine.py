@@ -25,6 +25,11 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 
+# path_utils lives in ai_engine/; event_engine is a sibling package
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).parent.parent))
+from ai_engine.path_utils import get_config_path as _get_config_path
+
 logger = logging.getLogger(__name__)
 
 
@@ -79,9 +84,7 @@ class RuleEngine:
             config     : Optional dict of additional settings.
         """
         if rules_path is None:
-            rules_path = str(
-                Path(__file__).parent.parent / "configs" / "alert_rules.yaml"
-            )
+            rules_path = str(_get_config_path("alert_rules.yaml"))
         self._rules: List[Dict[str, Any]] = []
         self._cooldowns: Dict[str, int] = {}  # rule_id -> last fired frame_number
         self._load_rules(rules_path)

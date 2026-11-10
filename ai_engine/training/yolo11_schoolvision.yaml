@@ -1,0 +1,18 @@
+# YOLO11-ready dataset config for SchoolVision AI training preparation.
+# This file is intentionally structured for later Kaggle training while keeping
+# the current runtime inference stack unchanged.
+
+train: ../data_pipeline/processed/train/images
+val: ../data_pipeline/processed/val/images
+test: ../data_pipeline/processed/test/images
+
+nc: 1
+names: ["person"]
+
+# Optional metadata for future training runs.
+# This project uses the existing YOLO11n baseline and all dataset preparation is
+# validation-first; no training is executed here.
+roboflow:
+  enabled: false
+  project: "schoolvision-ai"
+  workspace: "schoolvision"

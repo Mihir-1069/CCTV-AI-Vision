@@ -22,6 +22,7 @@ import yaml
 from ultralytics import YOLO
 
 from .pose_utils import PoseUtils
+from ..path_utils import get_config_path
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +62,7 @@ class PoseEstimator:
 
         # Load configuration
         if config_path is None:
-            config_path = Path(__file__).parent.parent.parent / "configs" / "model.yaml"
+            config_path = get_config_path("model.yaml")
 
         if Path(config_path).exists():
             self._load_config(config_path, config)
@@ -167,7 +168,12 @@ class PoseEstimator:
         try:
             logger.info(f"Loading pose model: {self.model_name}")
 
-            self.model = YOLO(self.model_name)
+            # Resolve path relative to project root so it works regardless of CWD
+            from ..path_utils import get_project_root as _root
+            model_path = _root() / self.model_name
+            resolved = str(model_path) if model_path.exists() else self.model_name
+
+            self.model = YOLO(resolved)
 
             if self.device != "cpu":
                 self.model.to(self.device)

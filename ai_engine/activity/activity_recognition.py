@@ -46,6 +46,7 @@ import numpy as np
 import yaml
 
 from ai_engine.pose.pose_analyzer import PoseAnalyzer
+from ai_engine.path_utils import get_config_path
 
 logger = logging.getLogger(__name__)
 
