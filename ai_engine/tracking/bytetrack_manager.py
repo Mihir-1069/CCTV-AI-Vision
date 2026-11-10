@@ -20,6 +20,7 @@ except ImportError:
     logger.warning("Supervision BYTETracker not available. Using simple IoU tracker instead.")
 
 from .tracking_utils import TrackingUtils
+from ..path_utils import get_config_path
 
 logger = logging.getLogger(__name__)
 
@@ -179,7 +180,7 @@ class ByteTrackManager:
         
         # Load configuration
         if config_path is None:
-            config_path = Path(__file__).parent.parent.parent / "configs" / "model.yaml"
+            config_path = get_config_path("model.yaml")
         
         if Path(config_path).exists():
             self._load_config(config_path, config)

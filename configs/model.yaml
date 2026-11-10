@@ -3,9 +3,10 @@
 
 # YOLO Detection Settings
 yolo:
-  # Model selection
-  model_name: "yolo11n.pt"  # Nano model for CPU inference
-  # Alternative options: yolo11s.pt, yolo11m.pt, yolo11l.pt, yolo11x.pt
+  # Model selection — path relative to repository root (CCTV-AI-Vision/)
+  # Ultralytics auto-downloads the model when the file is not found locally.
+  model_name: "models/pretrained/yolo11n.pt"  # Nano model for CPU inference
+  # Alternative options: models/pretrained/yolo11s.pt etc.
   
   # Detection parameters
   confidence_threshold: 0.5  # Minimum confidence for detection
@@ -25,7 +26,7 @@ yolo:
 
 # Pose Estimation Settings
 pose:
-  model_name: "yolo11n-pose.pt"
+  model_name: "models/pretrained/yolo11n-pose.pt"
   confidence_threshold: 0.5  # Minimum person detection confidence
   keypoint_threshold: 0.5  # Minimum confidence for a keypoint to be considered reliable
   device: "cpu"  # Options: "cpu", "cuda", "mps", "auto"
@@ -97,3 +98,50 @@ evaluation:
     - idf1
     - id_switches
     - fragmentation
+
+# Activity Recognition Settings
+# Phase 7 — Rule-based classifier using pose keypoints + temporal state.
+# All angle thresholds are in degrees. Velocity thresholds are in
+# normalised pixels per frame (reference: 640 px wide, 30 fps).
+activity:
+  # Minimum visible keypoints for any classification attempt
+  min_visible_keypoints: 5
+
+  # --- STANDING ---
+  standing_knee_angle_min: 155.0    # legs nearly straight
+  standing_hip_angle_min:  150.0    # torso upright
+  standing_aspect_ratio_min: 1.8    # tall bounding box (height/width)
+  standing_vertical_min_px:  30.0   # pixels shoulder-to-hip vertical gap
+
+  # --- SITTING ---
+  sitting_knee_angle_max:  120.0    # legs bent
+  sitting_hip_angle_max:   120.0    # torso angled
+  sitting_aspect_ratio_max:  1.4    # compressed bounding box
+
+  # --- WALKING ---
+  walking_velocity_min:    2.0      # normalised px/frame (lower bound)
+  walking_velocity_max:   20.0      # normalised px/frame (upper bound)
+  walking_knee_angle_max: 165.0     # legs not fully locked during gait
+
+  # --- RUNNING ---
+  running_velocity_min:   15.0      # normalised px/frame
+  running_knee_angle_max: 150.0     # more pronounced knee bend during run
+  running_min_history_frames: 5     # consecutive frames required
+
+  # --- FALL_LIKE_EVENT (conservative, three-condition guard) ---
+  # This is a geometric observation only. It does not diagnose, confirm,
+  # or assess the severity of any medical event.
+  fall_aspect_ratio_max:   1.0      # bounding box appears horizontal
+  fall_history_frames:    10        # frames to look back for prior upright label
+  fall_min_visible_keypoints: 7     # stricter visibility gate for fall events
+
+  # --- Temporal state management ---
+  smoothing_window:       10        # frames for majority-vote smoothing
+  smoothing_confidence_min: 0.5     # minimum majority fraction required
+  fall_override_window:    5        # frames for FALL_LIKE_EVENT override
+  track_max_gap:          30        # frames before a track is evicted
+  track_history_len:      15        # max deque length per track
+
+  # --- Velocity normalisation reference ---
+  reference_frame_width: 640        # pixels (velocity normalisation base)
+  reference_fps:         30.0       # frames per second (velocity normalisation base)
